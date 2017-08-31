@@ -1,0 +1,25 @@
+version: '3'
+services:
+  mysqlquotes:
+    restart: always
+    image: mysql:latest
+    command: mysqld --innodb-buffer-pool-size=20M
+    ports:
+      - "3306:3306"
+    environment:
+      - "MYSQL_DATABASE=quotes_db"
+      - "MYSQL_USER=quotes_u"
+      - "MYSQL_PASSWORD=quotes@1234"
+      - "MYSQL_ROOT_PASSWORD=root@1234"
+    volumes:
+      - "./mysql_data:/var/lib/mysql:rw"
+
+  djangoquotes:
+    build: .
+    command: python /code/manage.py runserver 0.0.0.0:5000
+    volumes:
+      - .:/code
+    ports:
+      - "5000:5000"
+    links: 
+      - mysqlquotes:mysql
