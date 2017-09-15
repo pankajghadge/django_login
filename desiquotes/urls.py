@@ -1,4 +1,4 @@
-"""quotes URL Configuration
+"""desiquotes URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -16,8 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from quotes.core import views as core_views
-from quotes.authentication import views as quotes_auth_views
+from desiquotes.core import views as core_views
+from desiquotes.authentication import views as quotes_auth_views
 
 urlpatterns = [
      url(r'^$', core_views.home, name='home'),

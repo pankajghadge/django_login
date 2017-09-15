@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from quotes.core.forms import ChangePasswordForm, ProfileForm
+from desiquotes.core.forms import ChangePasswordForm, ProfileForm
 
 # Create your views here
 """

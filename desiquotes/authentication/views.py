@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 
-from quotes.authentication.forms import SignUpForm
+from desiquotes.authentication.forms import SignUpForm
 
 def signup(request):
     if request.method == 'POST':
