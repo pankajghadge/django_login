@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'quotes.authentication',
     'quotes.core',
 ]
 
@@ -57,6 +59,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'quotes.urls'
+
+# During development only
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 TEMPLATES = [
     {
@@ -135,7 +140,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
+MEDIA_ROOT = PROJECT_DIR.parent.child('media')
+MEDIA_URL = '/media/'
 
-LOGIN_URL = '/'
-LOGIN_REDIRECT_URL = 'home'
+STATIC_ROOT = PROJECT_DIR.parent.child('staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (PROJECT_DIR.child('static'),)
+
+LOGIN_URL = '/account/login'
+LOGIN_REDIRECT_URL = '/'
+
+FILE_UPLOAD_TEMP_DIR = '/tmp/'
+FILE_UPLOAD_PERMISSIONS = 0o644
