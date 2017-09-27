@@ -77,7 +77,6 @@ def drafts(request):
     return render(request, 'quotes/drafts.html', {'drafts': drafts})
 
 
-"""
 @login_required
 @ajax_required
 def preview(request):
@@ -86,7 +85,8 @@ def preview(request):
             content = request.POST.get('content')
             html = 'Nothing to display :('
             if len(content.strip()) > 0:
-                html = markdown.markdown(content, safe_mode='escape')
+                #html = markdown.markdown(content, safe_mode='escape')
+                html = content
 
             return HttpResponse(html)
 
@@ -96,7 +96,6 @@ def preview(request):
     except Exception:
         return HttpResponseBadRequest()
 
-"""
 
 """
 @login_required

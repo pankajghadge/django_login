@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from desiquotes.core import views as core_views
 from desiquotes.authentication import views as quotes_auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
      url(r'^$', core_views.home, name='home'),
@@ -37,5 +39,11 @@ urlpatterns = [
      url(r'^settings/password/$', core_views.password, name='password'),
 
      url(r'^i18n/', include('django.conf.urls.i18n', namespace='i18n')),
+
+     url(r'^quotes/', include('desiquotes.quotes.urls')),
      url(r'^admin/', admin.site.urls)
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

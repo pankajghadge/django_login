@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     'desiquotes.authentication',
     'desiquotes.core',
+    'desiquotes.quotes',
     'taggit',
 ]
 
@@ -141,10 +142,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-MEDIA_ROOT = PROJECT_DIR.parent.child('media')
+MEDIA_ROOT = PROJECT_DIR.child('media')
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = PROJECT_DIR.parent.child('staticfiles')
+STATIC_ROOT = PROJECT_DIR.child('staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (PROJECT_DIR.child('static'),)
 

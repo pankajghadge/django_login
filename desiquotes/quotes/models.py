@@ -38,15 +38,15 @@ class Quote(models.Model):
 
     def __str__(self):
         return self.title
-"""
+    """
     def get_content_as_markdown(self):
         return markdown.markdown(self.content, safe_mode='escape')
-"""	
+    """	
 
     @staticmethod
     def get_published():
-        articles = Quote.objects.filter(status=Quote.PUBLISHED)
-        return articles
+        quotes = Quote.objects.filter(status=Quote.PUBLISHED)
+        return quotes
 
     @staticmethod
     def get_counted_tags():

@@ -3,6 +3,9 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import post_save
+import hashlib
+import os.path
+import urllib
 
 
 @python_2_unicode_compatible

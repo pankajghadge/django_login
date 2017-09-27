@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+{% block head %}
+  <link href="{% static 'css/quotes.css' %}" rel="stylesheet">
+  <script src="{% static 'js/quotes.js' %}"></script>
+{% endblock head %}
+
+{% block main %}
+  <ol class="breadcrumb">
+    <li><a href="{% url 'quotes' %}">{% trans 'Quotes' %}</a></li>
+    <li class="active">{% trans 'Quote' %}</li>
+  </ol>
+  {% if quote.create_user == request.user %}
+    <div>
+      <a href="{% url 'edit_quote' quote.pk %}" class="btn btn-primary pull-right">
+        <span class="glyphicon glyphicon-pencil"></span> {% trans "Edit Article" %}
+      </a>
+    </div>
+  {% endif %}
+  {% include 'quotes/partial_quote.html' with quote=quote %}
+{% endblock main %}

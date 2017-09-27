@@ -1,6 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from desiquotes.core.forms import ChangePasswordForm, ProfileForm
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.shortcuts import redirect, render
+from django.conf import settings as django_settings
+import os
+from PIL import Image
 
 # Create your views here
 """
@@ -10,6 +16,7 @@ from desiquotes.core.forms import ChangePasswordForm, ProfileForm
 @login_required
 def home(request):
         return render(request, 'core/home.html')
+
 
 @login_required
 def settings(request):
@@ -76,6 +83,8 @@ def password(request):
 def upload_picture(request):
     try:
         profile_pictures = django_settings.MEDIA_ROOT + '/profile_pictures/'
+        #print(profile_pictures)
+        #exit
         if not os.path.exists(profile_pictures):
             os.makedirs(profile_pictures)
         f = request.FILES['picture']
@@ -95,6 +104,7 @@ def upload_picture(request):
         return redirect('/settings/picture/?upload_picture=uploaded')
 
     except Exception as e:
+        #print('%s (%s)' % (e.message, type(e)))
         return redirect('/settings/picture/')
 
 

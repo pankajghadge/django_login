@@ -1,0 +1,19 @@
+<quote>
+  <h2><a href="{% url 'quotes' %}">{{ quote.content }}</a></h2>
+  <div class="info">
+    <span class="date">
+      <span class="glyphicon glyphicon-calendar"></span>
+      {{ quote.create_date }}
+    </span>
+  </div>
+  <div class="content">
+    {{ quote.get_content_as_markdown|safe }}
+  </div>
+  {% if quote.tags.names %}
+    <div class="tags">
+      {% for tag in quote.tags.names %}
+        <a href="{% url 'tag' tag %}"><span class="label label-default">{{ tag }}</span></a>
+      {% endfor %}
+    </div>
+  {% endif %}
+</quote>
