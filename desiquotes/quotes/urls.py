@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^$', views.quotes, name='quotes'),
     url(r'^write/$', views.CreateQuote.as_view(), name='write'),
     url(r'^preview/$', views.preview, name='preview'),
+    url(r'^remove/$', views.remove, name='remove'),
     url(r'^drafts/$', views.drafts, name='drafts'),
     url(r'^tag/(?P<tag_name>.+)/$', views.tag, name='tag'),
     url(r'^edit/(?P<pk>\d+)/$',

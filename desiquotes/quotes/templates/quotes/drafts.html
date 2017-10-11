@@ -11,6 +11,11 @@
     <li><a href="{% url 'quotes' %}">{% trans 'Quotes' %}</a></li>
     <li class="active">{% trans 'Drafts' %}</li>
   </ol>
+
+  {% comment "Optional note" %}
+  {{ drafts|join:" || " }}
+  {% endcomment %}
+
   <table class="table table-striped">
     <thead>
       <tr>
@@ -23,7 +28,10 @@
         <tr>
           <td><a href="{% url 'edit_quote' quote.pk %}">{{ quote.content }}</a></td>
           <td>
-            {% for tag in quote.get_tags %}
+	    {% comment "Optional method" %}
+            {% for tag in quote.tags.names %}
+	    {% endcomment %}
+            {% for tag in quote.get_tags %}        
               <span class="label label-default">{{ tag }}</span>
             {% endfor %}
           </td>

@@ -12,7 +12,6 @@ from django.db.models import Count
 #import markdown
 from taggit.managers import TaggableManager
 
-
 @python_2_unicode_compatible
 class Quote(models.Model):
     DRAFT = 'D'
@@ -37,12 +36,11 @@ class Quote(models.Model):
         ordering = ("-create_date",)
 
     def __str__(self):
-        return self.title
+        return self.content
     """
     def get_content_as_markdown(self):
         return markdown.markdown(self.content, safe_mode='escape')
     """	
-
     @staticmethod
     def get_published():
         quotes = Quote.objects.filter(status=Quote.PUBLISHED)
@@ -68,6 +66,14 @@ class Quote(models.Model):
             return '{0}...'.format(self.content[:255])
         else:
             return self.content
+    
+    @property
+    def get_tags(self):
+        return self.tags.slugs()
+  
+    def get_fields(self):
+        return [(field.name, field.value_to_string(self)) for field in Quote._meta.fields]
+
 """
     def get_summary_as_markdown(self):
         return markdown.markdown(self.get_summary(), safe_mode='escape')

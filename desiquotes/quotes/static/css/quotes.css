@@ -25,6 +25,11 @@
   margin-right: 1em;
 }
 
+.remove-quote:hover, .edit-quote:hover {
+  color: #333333;
+  cursor: pointer;
+}
+
 .info .user img {
   width: 20px;
   border-radius: 3px;
@@ -32,6 +37,7 @@
 
 quote .tags {
   font-size: 1em;
+  margin-bottom: 0.5em;
 }
 
 .popular-tags h4 {

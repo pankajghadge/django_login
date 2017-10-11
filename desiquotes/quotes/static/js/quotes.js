@@ -24,33 +24,26 @@ $(function () {
     });
   });
 
-  $("#comment").focus(function () {
-    $(this).attr("rows", "3");
-    $("#comment-helper").fadeIn();
-  });
-
-  $("#comment").blur(function () {
-    $(this).attr("rows", "1");
-    $("#comment-helper").fadeOut();
-  });
-
-  $("#comment").keydown(function (evt) {
-    var keyCode = evt.which?evt.which:evt.keyCode;
-    if (evt.ctrlKey && (keyCode == 10 || keyCode == 13)) {
-      $.ajax({
-        url: '/quotes/comment/',
-        data: $("#comment-form").serialize(),
-        cache: false,
-        type: 'post',
-        success: function (data) {
-          $("#comment-list").html(data);
-          var comment_count = $("#comment-list .comment").length;
-          $(".comment-count").text(comment_count);
-          $("#comment").val("");
-          $("#comment").blur();
-        }
-      });
-    }
+  $(".remove-quote").click(function () {
+    var quote_obj = $(this);
+    var quote = $(this).attr("quote-id");
+    var csrf = $(this).attr("csrf");
+    $.ajax({
+      url: '/quotes/remove/',
+      data: {
+        'quote': quote,
+        'csrfmiddlewaretoken': csrf
+      },
+      type: 'post',
+      cache: false,
+      success: function (data) {
+        alert($(quote_obj).attr("quote-id"));
+        $(quote_obj).closest("div.item").fadeOut(400, function () {
+	  alert($(quote_obj).closest("div.item").html());
+          $(quote_obj).closest("div.item").remove();
+        });
+      }
+    });
   });
 
 });

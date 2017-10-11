@@ -1,3 +1,4 @@
+{% load i18n %}
 <quote>
   <h2><a href="{% url 'quotes' %}">{{ quote.content }}</a></h2>
   <div class="info">
@@ -15,5 +16,23 @@
         <a href="{% url 'tag' tag %}"><span class="label label-default">{{ tag }}</span></a>
       {% endfor %}
     </div>
+  {% endif %}
+ 
+  {% comment "Print Object value" %} 
+  {% for name, value in quote.get_fields %}
+    {% if value %}
+      {{ name }} => {{ value }}
+    {% endif %}
+  {% endfor %}
+  {{ quote.create_user }}
+  {{ user }}
+  {% endcomment %}
+
+  {% if quote.create_user == user %}
+    <div class="info">
+    {% trans 'Action:' %}:
+      <span quote-id="{{ quote.pk }}" csrf="{{ csrf_token }}" class="glyphicon glyphicon-trash remove-quote" title="{% trans 'Remove this quote' %}"></span>
+      <span quote-id="{{ quote.pk }}" csrf="{{ csrf_token }}" class="glyphicon glyphicon-pencil edit-quote" title="{% trans 'Edit this quote' %}"> </span>
+    </div> 
   {% endif %}
 </quote>

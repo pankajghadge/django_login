@@ -97,6 +97,26 @@ def preview(request):
         return HttpResponseBadRequest()
 
 
+@login_required
+@ajax_required
+def remove(request):
+    try:
+        quote_id = request.POST.get('quote')
+        quote = Quote.objects.get(pk=quote_id)
+        if quote.create_user == request.user:
+            """ 
+            likes = feed.get_likes()
+            for like in likes:
+                like.delete()
+            """
+            quote.delete()
+            return HttpResponse()
+        else:
+            return HttpResponseForbidden()
+    except Exception:
+        return HttpResponseBadRequest()
+
+
 """
 @login_required
 @ajax_required
