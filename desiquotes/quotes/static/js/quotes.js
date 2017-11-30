@@ -25,25 +25,54 @@ $(function () {
   });
 
   $(".remove-quote").click(function () {
-    var quote_obj = $(this);
-    var quote = $(this).attr("quote-id");
-    var csrf = $(this).attr("csrf");
+    var quote    = $(this).closest("div.item");
+    var quote_id = $(quote).attr("quote-id");
+    var csrf     = $(quote).attr("csrf");
+    var answer = confirm('Do you want to delete?');
+    if(!answer) {
+	return false;
+    }
     $.ajax({
       url: '/quotes/remove/',
       data: {
-        'quote': quote,
+        'quote': quote_id,
         'csrfmiddlewaretoken': csrf
       },
       type: 'post',
       cache: false,
       success: function (data) {
-        alert($(quote_obj).attr("quote-id"));
-        $(quote_obj).closest("div.item").fadeOut(400, function () {
-	  alert($(quote_obj).closest("div.item").html());
-          $(quote_obj).closest("div.item").remove();
+        $(quote).fadeOut(400, function () {
+          $(quote).remove();
         });
       }
     });
   });
+
+  $(".like").click(function () {
+    var quote    = $(this).closest("div.item");
+    var quote_id = $(quote).attr("quote-id");
+    var csrf     = $(quote).attr("csrf");
+    $.ajax({
+      url: '/quotes/like/',
+      data: {
+        'quote': quote_id,
+        'csrfmiddlewaretoken': csrf
+      },
+      type: 'post',
+      cache: false,
+      success: function (data) {
+        if ($(".like", quote).hasClass("unlike")) {
+          $(".like", quote).removeClass("unlike");
+          $(".like .text", quote).text("Like");
+        }
+        else {
+          $(".like", quote).addClass("unlike");
+          $(".like .text", quote).text("Unlike");
+        }
+        $(".like .like-count", quote).text(data);
+      }
+    });
+  });
+ 
 
 });

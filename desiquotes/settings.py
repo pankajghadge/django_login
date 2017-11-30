@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'desiquotes.authentication',
     'desiquotes.core',
     'desiquotes.quotes',
+    'desiquotes.authors',
+    'desiquotes.activities',
     'taggit',
 ]
 

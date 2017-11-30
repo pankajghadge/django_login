@@ -6,15 +6,19 @@ from django.db.models.signals import post_save
 import hashlib
 import os.path
 import urllib
+from django.contrib.contenttypes.fields import GenericRelation
+from desiquotes.quotes.models import Quote
+from autoslug import AutoSlugField
 
 
 @python_2_unicode_compatible
 class Profile(models.Model):
     user = models.OneToOneField(User)
+    slug = AutoSlugField(populate_from='get_full_name', unique=True)
     location = models.CharField(max_length=50, null=True, blank=True)
     url = models.CharField(max_length=50, null=True, blank=True)
     job_title = models.CharField(max_length=50, null=True, blank=True)
-
+    writer  = GenericRelation(Quote)
     class Meta:
         db_table = 'auth_profile'
 

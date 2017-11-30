@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import redirect, render
 from django.conf import settings as django_settings
+from django.http import HttpResponseRedirect
+
 import os
 from PIL import Image
 
@@ -13,10 +15,11 @@ from PIL import Image
 @login_required(login_url="/account/login")
 """
 
-@login_required
+"""
 def home(request):
-        return render(request, 'core/home.html')
-
+    #return render(request, 'quotes/home')
+    return HttpResponseRedirect("/quotes/home")
+"""
 
 @login_required
 def settings(request):

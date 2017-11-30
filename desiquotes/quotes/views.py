@@ -7,10 +7,16 @@ from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse_lazy
 
+from desiquotes.activities.models import Activity
+from django.contrib.contenttypes.models import ContentType
+
+
 #import markdown
 from desiquotes.quotes.forms import QuoteForm
 from desiquotes.quotes.models import Quote
 from desiquotes.decorators import ajax_required
+import pprint
+import numpy as np
 
 
 def _quotes(request, quotes):
@@ -27,36 +33,46 @@ def _quotes(request, quotes):
 
     popular_tags = Quote.get_counted_tags()
 
-    return render(request, 'quotes/quotes.html', {
+    return {
         'quotes': quotes,
         'popular_tags': popular_tags
-    })
+    }
 
-
-class CreateQuote(LoginRequiredMixin, CreateView):
-    """
-    """
-    template_name = 'quotes/write.html'
+class CreateUserQuote(LoginRequiredMixin, CreateView):
+    template_name = 'quotes/add_user_quote.html'
     form_class = QuoteForm
-    success_url = reverse_lazy('quotes')
+    success_url = reverse_lazy('quotes:quotes')
 
     def form_valid(self, form):
-        form.instance.create_user = self.request.user
-        return super(CreateQuote, self).form_valid(form)
+        #form.instance.create_user = self.request.user
+        form.instance.content_object = self.request.user
+        form.instance.object_id = self.request.user.id 
+        form.instance.writer_type = Quote.USER
+
+        return super(CreateUserQuote, self).form_valid(form)
 
 
-class EditQuote(LoginRequiredMixin, UpdateView):
-    template_name = 'quotes/edit.html'
+class EditUserQuote(LoginRequiredMixin, UpdateView):
+    template_name = 'quotes/edit_user_quote.html'
     model = Quote
     form_class = QuoteForm
-    success_url = reverse_lazy('quotes')
+    success_url = reverse_lazy('quotes:quotes')
 
+class CreateAuthorQuote(LoginRequiredMixin, CreateView):
+    success_url = reverse_lazy('quotes:quotes')
+
+class EditAuthorQuote(LoginRequiredMixin, UpdateView):
+    success_url = reverse_lazy('quotes:quotes')
+
+def home(request):
+    quotes = Quote.get_published()
+    return  render(request, 'quotes/quotes.html', _quotes(request, quotes))
 
 @login_required
-def quotes(request):
-    all_quotes = Quote.get_published()
-    return _quotes(request, all_quotes)
-
+def user_quotes(request, name=None):
+    logged_in_user = request.user
+    quotes = Quote.get_user_published(logged_in_user)
+    return  render(request, 'quotes/quotes.html', _quotes(request, quotes))
 
 @login_required
 def quote(request, slug):
@@ -66,14 +82,15 @@ def quote(request, slug):
 
 @login_required
 def tag(request, tag_name):
-    quotes = Quote.objects.filter(tags__name=tag_name).filter(status='P')
-    return _quotes(request, quotes)
+    #quotes = Quote.objects.filter(tags__name=tag_name).filter(status='P')
+    quotes = Quote.get_published(tag_name=tag_name)
+    return render(request, 'quotes/quotes.html', _quotes(request, quotes))
 
 
 @login_required
 def drafts(request):
-    drafts = Quote.objects.filter(create_user=request.user,
-                                    status=Quote.DRAFT)
+    #drafts = Quote.objects.filter(create_user=request.user, status=Quote.DRAFT)
+    drafts = Quote.objects.filter(object_id=request.user.id, status=Quote.DRAFT)
     return render(request, 'quotes/drafts.html', {'drafts': drafts})
 
 
@@ -103,9 +120,10 @@ def remove(request):
     try:
         quote_id = request.POST.get('quote')
         quote = Quote.objects.get(pk=quote_id)
-        if quote.create_user == request.user:
+        #if quote.create_user == request.user:
+        if quote.object_id == request.user.id:
             """ 
-            likes = feed.get_likes()
+            likes = quote.get_likes()
             for like in likes:
                 like.delete()
             """
@@ -116,33 +134,35 @@ def remove(request):
     except Exception:
         return HttpResponseBadRequest()
 
-
-"""
 @login_required
 @ajax_required
-def comment(request):
+
+def like(request):
+    quote_id = request.POST['quote']
+    quote    = Quote.objects.get(pk=quote_id)
+    user     = request.user
+    #like    = QuoteActivity.objects.filter(activity_type=QuoteActivity.LIKE, quote=quote_id, user=user)
+    #like    = quote.likes.filter(activity_type=Activity.LIKE, user=user)
     try:
-        if request.method == 'POST':
-            quote_id = request.POST.get('quote')
-            quote = Quote.objects.get(pk=quote_id)
-            comment = request.POST.get('comment')
-            comment = comment.strip()
-            if len(comment) > 0:
-                quote_comment = QuoteComment(user=request.user,
-                                                 quote=quote,
-                                                 comment=comment)
-                quote_comment.save()
-            html = ''
-            for comment in quote.get_comments():
-                html = '{0}{1}'.format(html, render_to_string(
-                    'quotes/partial_quote_comment.html',
-                    {'comment': comment}))
+        like = Activity.objects.get(content_type=ContentType.objects.get_for_model(quote), object_id=quote.id, user=request.user)
 
-            return HttpResponse(html)
-
+        if like:
+            """
+            user.profile.unotify_liked(quote)
+	    """
+            like.delete()
+            #Activity.objects.delete(content_object=quote, activity_type=Activity.LIKE, user=request.user)
         else:
-            return HttpResponseBadRequest()
-
-    except Exception:
-        return HttpResponseBadRequest()
-"""
+            #like = QuoteActivity(activity_type=QuoteActivity.LIKE, quote=quote, user=user)
+            #like.save()
+            #quote.likes.create(activity_type=Activity.LIKE, user=user)
+            like = Activity(activity_type=Activity.LIKE, content_object=quote, user=request.user)
+            like.save()
+            """
+            user.profile.notify_liked(quote)
+    	    """
+    except Activity.DoesNotExist:
+        quote.likes.create(activity_type=Activity.LIKE, user=user)
+	
+    #return HttpResponse(quote.calculate_likes())
+    return HttpResponse(quote.likes.count())

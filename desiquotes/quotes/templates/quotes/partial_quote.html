@@ -1,24 +1,30 @@
 {% load i18n %}
 <quote>
+  {% comment %}
   <h2><a href="{% url 'quotes' %}">{{ quote.content }}</a></h2>
+  {% endcomment %}
+  
+  <div class="content">
+    {{ quote.content }}
+  </div>
+  <div class="info">
+  -- {{ quote.object_id.get_screen_name }}
+  </div>
   <div class="info">
     <span class="date">
       <span class="glyphicon glyphicon-calendar"></span>
       {{ quote.create_date }}
     </span>
   </div>
-  <div class="content">
-    {{ quote.get_content_as_markdown|safe }}
-  </div>
   {% if quote.tags.names %}
     <div class="tags">
       {% for tag in quote.tags.names %}
-        <a href="{% url 'tag' tag %}"><span class="label label-default">{{ tag }}</span></a>
+        <a href="{% url 'quotes:tag' tag %}"><span class="label label-default">{{ tag }}</span></a>
       {% endfor %}
     </div>
   {% endif %}
- 
-  {% comment "Print Object value" %} 
+   
+  {% comment %} 
   {% for name, value in quote.get_fields %}
     {% if value %}
       {{ name }} => {{ value }}
@@ -28,11 +34,24 @@
   {{ user }}
   {% endcomment %}
 
-  {% if quote.create_user == user %}
-    <div class="info">
-    {% trans 'Action:' %}:
-      <span quote-id="{{ quote.pk }}" csrf="{{ csrf_token }}" class="glyphicon glyphicon-trash remove-quote" title="{% trans 'Remove this quote' %}"></span>
-      <span quote-id="{{ quote.pk }}" csrf="{{ csrf_token }}" class="glyphicon glyphicon-pencil edit-quote" title="{% trans 'Edit this quote' %}"> </span>
-    </div> 
-  {% endif %}
+  <div class="interaction info">
+    {% if user in quotes.get_likers %}
+      <a href="#" class="like unlike">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        <span class="text">{% trans 'Unlike' %}</span>
+        (<span class="like-count">{{ quote.get_likes }}</span>)
+      </a>
+    {% else %}
+        <a href="#" class="like">
+          <span class="glyphicon glyphicon-thumbs-up"></span>
+          <span class="text">{% trans 'Like' %}</span>
+          (<span class="like-count">{{ quote.get_likes }}</span>)
+        </a>
+    {% endif %}
+
+    {% if quote.object_id == user.id and quote.writer_type == quote.get_writer_type %}
+      <span class="glyphicon glyphicon-trash remove-quote" title="{% trans 'Remove this quote' %}"></span>
+      <span class="glyphicon glyphicon-pencil edit-quote" title="{% trans 'Edit this quote' %}"> </span>
+    {% endif %}
+  </div> 
 </quote>

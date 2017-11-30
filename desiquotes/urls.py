@@ -17,12 +17,14 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from desiquotes.core import views as core_views
+from desiquotes.quotes import views as quotes_views
 from desiquotes.authentication import views as quotes_auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-     url(r'^$', core_views.home, name='home'),
+     #url(r'^$', core_views.home, name='home'),
+     url(r'^$', quotes_views.home, name='home'),
      url(r'^account/login', auth_views.login, {'template_name': 'core/login.html'}, name='login'),
      url(r'^account/logout', auth_views.logout, {'template_name': 'core/logged_out.html'}, name='logout'),
      url(r'^account/password_reset/$', auth_views.password_reset, {'template_name': 'core/password_reset.html'}, name="password_reset"),

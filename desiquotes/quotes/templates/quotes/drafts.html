@@ -8,10 +8,9 @@
 
 {% block main %}
   <ol class="breadcrumb">
-    <li><a href="{% url 'quotes' %}">{% trans 'Quotes' %}</a></li>
+    <li><a href="{% url 'quotes:quotes' %}">{% trans 'Quotes' %}</a></li>
     <li class="active">{% trans 'Drafts' %}</li>
   </ol>
-
   {% comment "Optional note" %}
   {{ drafts|join:" || " }}
   {% endcomment %}
@@ -26,7 +25,7 @@
     <tbody>
       {% for quote in drafts %}
         <tr>
-          <td><a href="{% url 'edit_quote' quote.pk %}">{{ quote.content }}</a></td>
+          <td><a href="{% url 'quotes:edit_user_quote' quote.pk %}">{{ quote.content }}</a></td>
           <td>
 	    {% comment "Optional method" %}
             {% for tag in quote.tags.names %}

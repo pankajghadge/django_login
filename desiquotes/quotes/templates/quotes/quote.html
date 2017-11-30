@@ -10,13 +10,13 @@
 
 {% block main %}
   <ol class="breadcrumb">
-    <li><a href="{% url 'quotes' %}">{% trans 'Quotes' %}</a></li>
+    <li><a href="{% url 'quotes:quotes' %}">{% trans 'Quotes' %}</a></li>
     <li class="active">{% trans 'Quote' %}</li>
   </ol>
   {% if quote.create_user == request.user %}
     <div>
-      <a href="{% url 'edit_quote' quote.pk %}" class="btn btn-primary pull-right">
-        <span class="glyphicon glyphicon-pencil"></span> {% trans "Edit Article" %}
+      <a href="{% url 'quotes:edit_user_quote' quote.pk %}" class="btn btn-primary pull-right">
+        <span class="glyphicon glyphicon-pencil"></span> {% trans "Edit Quote" %}
       </a>
     </div>
   {% endif %}
