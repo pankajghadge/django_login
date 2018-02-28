@@ -41,7 +41,7 @@ def _quotes(request, quotes):
 class CreateUserQuote(LoginRequiredMixin, CreateView):
     template_name = 'quotes/add_user_quote.html'
     form_class = QuoteForm
-    success_url = reverse_lazy('quotes:quotes')
+    success_url = reverse_lazy('quotes:user_quotes')
 
     def form_valid(self, form):
         #form.instance.create_user = self.request.user
@@ -56,13 +56,15 @@ class EditUserQuote(LoginRequiredMixin, UpdateView):
     template_name = 'quotes/edit_user_quote.html'
     model = Quote
     form_class = QuoteForm
-    success_url = reverse_lazy('quotes:quotes')
+    #success_url = reverse_lazy('quotes:quotes')
 
 class CreateAuthorQuote(LoginRequiredMixin, CreateView):
-    success_url = reverse_lazy('quotes:quotes')
+    model = Quote
+    #success_url = reverse_lazy('quotes:quotes')
 
 class EditAuthorQuote(LoginRequiredMixin, UpdateView):
-    success_url = reverse_lazy('quotes:quotes')
+    model = Quote
+    #success_url = reverse_lazy('quotes:quotes')
 
 def home(request):
     quotes = Quote.get_published()

@@ -10,7 +10,7 @@
 
 {% block main %}
   <ol class="breadcrumb">
-    <li><a href="{% url 'quotes:quotes' %}">{% trans 'Quotes' %}</a></li>
+    <li><a href="{% url 'quotes:home' %}">{% trans 'Quotes' %}</a></li>
     <li class="active">{% trans 'Quote' %}</li>
   </ol>
   {% if quote.create_user == request.user %}

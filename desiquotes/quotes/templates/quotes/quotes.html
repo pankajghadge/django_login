@@ -22,19 +22,24 @@
     <h1>{% trans 'Quote' %}</h1>
   </div>
 
+  {% if quotes %}
   <div class="masonry">
         {% for quote in quotes %}
 	  <div class="item" quote-id="{{ quote.pk }}" csrf="{{ csrf_token }}">
           {% include 'quotes/partial_quote.html' with quote=quote %}
 	  </div>
-        {% empty %}
-          <h4 class="no-data">{% trans 'There is no published quote yet' %}. <a href="{% url 'quotes:add_user_quote' %}">{% trans 'Be the first one to publish' %}!</a></h4>
         {% endfor %}
   </div>
+  {% else %}
+        <h4 class="no-data">{% trans 'There is no published quote yet' %}. <a href="{% url 'quotes:add_user_quote' %}">{% trans 'Be the first one to publish' %}!</a></h4>
+
+  {% endif %}
 
   <div class="row">
     <div class="col-md-12">
       {% include 'paginator.html' with paginator=quotes %}
     </div>
   </div>
+
+
 {% endblock main %}

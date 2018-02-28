@@ -14,7 +14,8 @@ from autoslug import AutoSlugField
 @python_2_unicode_compatible
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    slug = AutoSlugField(populate_from='get_full_name', unique=True)
+    #slug = AutoSlugField(populate_from='get_full_name', unique=True)
+    slug = AutoSlugField(populate_from=lambda instance: instance.user.get_full_name(), unique=True)
     location = models.CharField(max_length=50, null=True, blank=True)
     url = models.CharField(max_length=50, null=True, blank=True)
     job_title = models.CharField(max_length=50, null=True, blank=True)
